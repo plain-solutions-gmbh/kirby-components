@@ -105,7 +105,7 @@ Adding images to your component folder (with the same name as the component itse
 
 ![files selector](https://raw.githubusercontent.com/youngcut/kirby-components/main/.github/selector_files.png)
 
-These images will shown in the selector and you can style it with the `selector` property:
+These images will shown in the selector and you can be styled with the `selector` property:
 
 ```yml
 my_field:
@@ -129,7 +129,7 @@ my_field:
 You can use the component selector also standalone:
 
 ```yml
-images_toggle:
+images_toggles:
   type: imagetoggles
   root: location/of/the/images
   ratio: 2/1
