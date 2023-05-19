@@ -15,7 +15,7 @@ Do you also find it difficult to switch between snippets and blueprints folders?
 
 **Manually**
 
-[Download](https://github.com/youngcut/kirby-comopnents) and copy the plugin into your plugin folder: `/site/plugins/`
+[Download](https://github.com/youngcut/kirby-components) and copy the plugin into your plugin folder: `/site/plugins/`
 
 **With Composer**
 
@@ -23,16 +23,16 @@ Do you also find it difficult to switch between snippets and blueprints folders?
 
 ## First step
 
-1. Create a folder `site/components`
-2. Make subfolders for your components, e.g. `my_component`
-3. Create at least one blueprint with the same name as the folder. e.g. `my_component.yml`
-4. Create at least one snippet. e.g. `my_component.php`
+1. Create a components folderfolder `site/components`
+2. Make a subfolder for your component, e.g. `components/my_component`
+3. Create at least one blueprint with the same name as the folder. e.g. `my_component/my_component.yml`
+4. Create at least one snippet. e.g. `my_component//my_component.php`
 
 > You can create more snippets and blueprints in your components folder. (called sub components)
 > To access them later, declaring the location `my_component/my_subcomponent`
 
 > You can set label, title and icons in your blueprint.
-> Even tabs and columns if you like.
+> Even tabs and columns, if you like.
 
 ## Using in your template
 
@@ -49,7 +49,7 @@ component('my_component', $page, ['title' => 'This is a different title.']);
 ```
 
 > The first and the second parameter could be an array or an Kirby object, that contains a content object. 
-> Try it out whats working for you.
+> Try it out what is working for you.
 
 ## Using in your panel
 
@@ -73,7 +73,7 @@ Extend your component like in the example above:
 $page->my_field()->toComponent(['new_value' => 'My new value']);
 ```
 
-The variables in the component are accessible with `$content`
+The variables in the components snippet are accessible with `$content`
 
 ```php
 $content->field_in_component();
@@ -95,17 +95,17 @@ my_field:
 
 ![plain selector](https://raw.githubusercontent.com/youngcut/kirby-components/main/.github/selector_plain.png)
 
-> By choose a component, the fields of the selected component will appear.
+> By choosing, the fields of the selected component will appear.
 
-> To change the labels in the selector, set the title of the component.
+> To change the labels in the selector, set the property 'title' of the component.
 
 **Component selector with images**
 
-Adding images to your component folder (with tha same name as the component itself)
+Adding images to your component folder (with the same name as the component itself)
 
 ![files selector](https://raw.githubusercontent.com/youngcut/kirby-components/main/.github/selector_files.png)
 
-These images will shown in the selector and you can style this with the `selector` property:
+These images will shown in the selector and you can style it with the `selector` property:
 
 ```yml
 my_field:
@@ -129,7 +129,7 @@ my_field:
 You can use the component selector also standalone:
 
 ```yml
-image_toggle:
+images_toggle:
   type: imagetoggles
   root: location/of/the/images
   ratio: 2/1
@@ -151,13 +151,13 @@ It follows the same rules as the `toggles`field.
 
 ### Output the component field
 
-Use the `toCopmonent()`method.
+Use the `toComponent()`method.
 
 ```php
 $page->my_field()->toComponent();
 ```
 
-Or you can extend the values (by array or a Kirby object):
+Or you can extend the values (with an array or an Kirby object):
 
 ```php
 $page->my_field()->toComponent(['my_component_field' => 'My existing or new value']);
@@ -166,7 +166,13 @@ $page->my_field()->toComponent($page->any_section());
 
 The `toComponent()` method delivers the selected component.
 
-If you like to output all the available component of the component fields use `toComponents()`.
+If you like to use all the available components of the component fields use `toComponents()`:
+
+```html
+<?php foreach ($page->my_field()->toComponents() as $component): ?>
+  <?= $component ?>
+<?php endforeach ?>
+```
 
 ## The components field
 
@@ -189,7 +195,7 @@ multiple_components:
 
 ## Tab injection
 
-Add component as tab to the component(s) fields.
+Add a tabs with components to the component(s) fields.
 
 ```yml
 multiple_components:
@@ -205,7 +211,6 @@ multiple_components:
 ![injected_tab](https://raw.githubusercontent.com/youngcut/kirby-components/main/.github/injected_tab.png)
 
 you can also extend your component there:
-
 
 ```yml
 multiple_components:
