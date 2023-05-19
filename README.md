@@ -3,7 +3,6 @@
 ## Overview
 
 Do you love to make awesome projects with Kirby CMS?
-
 Do you also find it difficult to switch between snippets and blueprints folders?
 
 **This Plugin will change your life!**
@@ -29,12 +28,10 @@ Do you also find it difficult to switch between snippets and blueprints folders?
 3. Create at least one blueprint with the same name as the folder. e.g. `my_component.yml`
 4. Create at least one snippet. e.g. `my_component.php`
 
-> You can create more snippets and blueprints in your component. (called sub components)
-> 
-> To access them later, declare the location `my_component/my_subcomponent`
+> You can create more snippets and blueprints in your components folder. (called sub components)
+> To access them later, declaring the location `my_component/my_subcomponent`
 
 > You can set label, title and icons in your blueprint.
-> 
 > Even tabs and columns if you like.
 
 ## Using in your template
@@ -64,6 +61,8 @@ my_field:
   fieldsets: my_component
 ```
 
+> You can also use Kirby blocks in here: `fieldsets: blocks/heading`
+> 
 ```php
 $page->my_field()->toComponent();
 ```
@@ -80,7 +79,6 @@ The variables in the component are accessible with `$content`
 $content->field_in_component();
 ```
 
-> You can also use Kirby blocks in here: `fieldsets: blocks/heading`
 
 ### The component selector
 
@@ -97,7 +95,7 @@ my_field:
 
 ![plain selector](https://raw.githubusercontent.com/youngcut/kirby-components/main/.github/selector_plain.png)
 
-> By selection the component, the fields of the selected component will shown.
+> By choose a component, the fields of the selected component will appear.
 
 > To change the labels in the selector, set the title of the component.
 
@@ -107,7 +105,7 @@ Adding images to your component folder (with tha same name as the component itse
 
 ![files selector](https://raw.githubusercontent.com/youngcut/kirby-components/main/.github/selector_files.png)
 
-These will shown in the selector. You can style this with the `selector` property:
+These images will shown in the selector and you can style this with the `selector` property:
 
 ```yml
 my_field:
@@ -128,7 +126,7 @@ my_field:
 
 **Images toggles field**
 
-You can use the selector standalone:
+You can use the component selector also standalone:
 
 ```yml
 image_toggle:
@@ -168,13 +166,12 @@ $page->my_field()->toComponent($page->any_section());
 
 The `toComponent()` method delivers the selected component.
 
-If you like all available component of the component fields use `toComponents()`.
+If you like to output all the available component of the component fields use `toComponents()`.
 
 ## The components field
 
 Add more than one component by using the `components` field.
-
-It follows the same rule as the Kirby `blocks` field.
+It follows the same rules as the Kirby `blocks` field.
 
 ```yml
 multiple_components:
