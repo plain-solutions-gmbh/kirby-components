@@ -1,0 +1,46 @@
+.k-images-toggles-field .k-toggles-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 0;
+}
+.k-images-toggles-field .k-toggles-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.k-images-toggles-field[data-hasimages] li {
+  height: auto;
+}
+.k-images-toggles-field[data-hasimages] label {
+  flex-direction: column;
+  padding: 0.3em;
+}
+.k-images-toggles-field[data-hasimages] .k-toggles-text {
+  display: block;
+  padding: 0.6em 0 0.3em;
+  text-align: center;
+  width: 100%;
+}
+.k-component-license > .k-box {
+  text-align: center;
+}
+.k-component-license-dialog .k-loader {
+  display: inline-block;
+  margin-right: 0.4em;
+}
+.k-component-license-dialog .loader-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.k-component-license-dialog .loader-text {
+  line-height: 1.2em;
+}
+.k-component-license .link {
+  text-decoration: underline;
+  cursor: pointer;
+}
