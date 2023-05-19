@@ -9,7 +9,7 @@ Do you also find it difficult to switch between snippets and blueprints folders?
 
 ![screenshot](https://raw.githubusercontent.com/youngcut/kirby-components/main/.github/screenshot.gif)
 
-**Watch the [video tutorial](https://www.youtube.com/watch?v=1ycWtWRL1hQ) or check the [example project](https://github.com/youngcut/kirby-comopnents-example)**
+**Watch the [video tutorial](https://www.youtube.com/watch?v=1ycWtWRL1hQ) or check the [example project](https://github.com/youngcut/kirby-components-example)**
 
 ## Installation
 
