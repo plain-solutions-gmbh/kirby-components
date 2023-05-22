@@ -65,8 +65,11 @@ class ComponentLicense
 
     private static function readLicense()
     {
-        $file = F::read(static::licenseFile());
-        return json_encode($file);
+        try {
+            return Json::read(static::licenseFile());
+        } catch (\Throwable $th) {
+            return false;
+        }
     }
 
     public static function register($key, $email)
