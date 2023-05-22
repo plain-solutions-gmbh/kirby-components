@@ -3,7 +3,7 @@
     "description": "Brings blueprints and snippets to one place.",
 	"license": "proprietary",
     "type": "kirby-plugin",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "authors": [{
         "name": "Roman Gsponer",
         "email": "kirby@microman.ch"
