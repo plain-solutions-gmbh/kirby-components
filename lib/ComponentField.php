@@ -97,7 +97,7 @@ class ComponentField extends ComponentsField
             $props["options"][] = [
                 "image" => $fieldset->image(),
                 "icon" => $fieldset->icon(),
-                "text" => $fieldset->name(),
+                "text" => $fieldset->label(),
                 "value" => $fieldset->type(),
             ];
         }
