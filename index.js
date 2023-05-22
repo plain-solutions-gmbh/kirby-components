@@ -23,15 +23,17 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     var _vm = this;
     var _h = _vm.$createElement;
     var _c = _vm._self._c || _h;
-    return _c("k-field", _vm._b({ staticClass: "k-component-field", attrs: { "input": _vm._uid, "counter": _vm.counterOptions } }, "k-field", _vm.$props, false), [_vm.showLicense ? _c("k-component-license", { on: { "onSuccess": function($event) {
+    return _c("div", [!_vm.issingle ? _c("k-field", _vm._b({ staticClass: "k-component-field", attrs: { "input": _vm._uid, "counter": _vm.counterOptions } }, "k-field", _vm.$props, false), [_vm.showLicense ? _c("k-component-license", { on: { "onSuccess": function($event) {
       _vm.showLicense = false;
-    } } }) : _vm._e(), !_vm.issingle ? _c("k-imagetoggles-field", _vm._b({ attrs: { "value": _vm.current, "label": _vm.label }, on: { "input": function($event) {
+    } } }) : _vm._e(), _c("k-imagetoggles-field", _vm._b({ attrs: { "value": _vm.current, "label": _vm.label }, on: { "input": function($event) {
       return _vm.setFieldset($event);
-    } } }, "k-imagetoggles-field", _vm.selector, false)) : _vm._e(), _vm._l(_vm.components, function(component, componentName) {
+    } } }, "k-imagetoggles-field", _vm.selector, false)), _vm._l(_vm.components, function(component, componentName) {
       return _c("k-component-form", _vm._b({ key: componentName, attrs: { "type": component.type, "hidden": !component.isSelected, "value": component.content, "endpoints": _vm.endpoints }, on: { "update": function($event) {
         return _vm.input(componentName, $event);
       } } }, "k-component-form", _vm.fieldsets[component.type], false));
-    })], 2);
+    })], 2) : _c("div", [_c("k-component-form", _vm._b({ attrs: { "type": _vm.current, "value": _vm.components[_vm.current].content, "endpoints": _vm.endpoints }, on: { "update": function($event) {
+      return _vm.input(_vm.current, $event);
+    } } }, "k-component-form", _vm.fieldsets[_vm.current], false))], 1)], 1);
   };
   var staticRenderFns$6 = [];
   render$6._withStripped = true;
@@ -293,9 +295,14 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
           return false;
         }
       },
+      tabs: {
+        type: Object,
+        default() {
+          return {};
+        }
+      },
       icon: String,
       id: String,
-      tabs: Object,
       type: String,
       value: Object
     },

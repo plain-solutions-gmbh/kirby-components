@@ -1,5 +1,7 @@
 <template>
+<div>
   <k-field
+    v-if="!issingle"
     v-bind="$props"
     :input="_uid"
     :counter="counterOptions"
@@ -7,7 +9,6 @@
   >
     <k-component-license  v-if="showLicense" @onSuccess="showLicense = false" />
     <k-imagetoggles-field
-      v-if="!issingle"
       v-bind="selector"
       :value="current"
       :label="label"
@@ -24,6 +25,17 @@
       @update="input(componentName, $event)"
     />
   </k-field>
+  <div v-else>
+    <k-component-form
+    v-bind="fieldsets[current]"
+    :type="current"
+    :value="components[current].content"
+    :endpoints="endpoints"
+    @update="input(current, $event)"
+    />
+  </div>
+</div>
+
 </template>
 
 <script>
@@ -56,13 +68,13 @@ export default {
       return current;
     },
   },
-  created() {
-    this.showLicense = !this.license
-  },
   watch: {
     components() {
       this.components = this.value;
     },
+  },
+  created() {
+    this.showLicense = !this.license
   },
   methods: {
     input(name, value) {
