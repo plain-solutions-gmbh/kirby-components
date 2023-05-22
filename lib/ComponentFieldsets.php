@@ -136,6 +136,8 @@ class ComponentFieldsets extends Fieldsets
             $comp = $blueprint = static::$components->load($component);
             $comp = A::merge($comp, $options);
             static::$tabs[$position][$name] = $comp;
+            $comp = A::merge($comp, $options);
+            static::$tabs[$position][$name]['label'] = static::getName($comp, $name);
         }
     }
 }
