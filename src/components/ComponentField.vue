@@ -1,31 +1,29 @@
 <template>
-  <div class="k-component-field">
-    <k-grid>
-      <k-column v-if="showLicense">
-        <k-component-license @onSuccess="showLicense = false" />
-      </k-column>
-      <k-column v-if="!issingle">
-        <k-imagetoggles-field
-          v-bind="selector"
-          :value="current"
-          :label="label"
-          @input="setFieldset($event)"
-        />
-      </k-column>
-      <k-column>
-        <k-component-form
-          v-for="(component, componentName) in components"
-          :key="componentName"
-          v-bind="fieldsets[component.type]"
-          :type="component.type"
-          :hidden="!component.isSelected"
-          :value="component.content"
-          :endpoints="endpoints"
-          @update="input(componentName, $event)"
-        />
-      </k-column>
-    </k-grid>
-  </div>
+  <k-field
+    v-bind="$props"
+    :input="_uid"
+    :counter="counterOptions"
+    class="k-component-field"
+  >
+    <k-component-license  v-if="showLicense" @onSuccess="showLicense = false" />
+    <k-imagetoggles-field
+      v-if="!issingle"
+      v-bind="selector"
+      :value="current"
+      :label="label"
+      @input="setFieldset($event)"
+    />
+    <k-component-form
+      v-for="(component, componentName) in components"
+      :key="componentName"
+      v-bind="fieldsets[component.type]"
+      :type="component.type"
+      :hidden="!component.isSelected"
+      :value="component.content"
+      :endpoints="endpoints"
+      @update="input(componentName, $event)"
+    />
+  </k-field>
 </template>
 
 <script>
@@ -80,3 +78,11 @@ export default {
   },
 };
 </script>
+
+<style>
+
+.k-component-form {
+  margin-top:1.5em;
+}
+
+</style>

@@ -1,3 +1,8 @@
+
+.k-component-form {
+  margin-top:1.5em;
+}
+
 .k-images-toggles-field .k-toggles-image-wrapper {
   position: relative;
   width: 100%;
@@ -27,6 +32,10 @@
 }
 .k-component-license > .k-box {
   text-align: center;
+}
+.k-component-license {
+  margin-bottom:1.5em;
+  margin-top:.5em;
 }
 .k-component-license-dialog .k-loader {
   display: inline-block;

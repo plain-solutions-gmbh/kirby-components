@@ -142,6 +142,12 @@ export default {
   text-align: center;
 }
 
+
+.k-component-license {
+  margin-bottom:1.5em;
+  margin-top:.5em;
+}
+
 .k-component-license-dialog .k-loader {
   display: inline-block;
   margin-right: 0.4em;
