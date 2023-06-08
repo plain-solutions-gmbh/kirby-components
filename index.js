@@ -118,13 +118,13 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
         return current;
       }
     },
-    created() {
-      this.showLicense = !this.license;
-    },
     watch: {
       components() {
         this.components = this.value;
       }
+    },
+    created() {
+      this.showLicense = !this.license;
     },
     methods: {
       input(name, value) {
