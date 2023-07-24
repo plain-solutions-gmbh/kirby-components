@@ -10,32 +10,30 @@ namespace Microman;
  * @license   https://license.microman.ch/license/
  */
 
-use Kirby\Cms\Blueprint;
-use Kirby\Cms\Fieldsets;
-use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\I18n;
+use Closure;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Kirby\Cms\Items;
 
-class ComponentFieldsets extends Fieldsets
+class ComponentFieldsets extends Items
 {
     public const ITEM_CLASS = ComponentFieldset::class;
 
+	public static array $methods = [];
     protected static $components;
     protected static $tabs;
 
     protected static function setTabs($fieldset, $type)
     {
         if (
-            is_null($tabs = static::$tabs) ||
-            ($fieldset["type"] ?? "") === "group"
+            is_null($tabs = static::$tabs)
         ) {
             return $fieldset;
         }
 
         if (array_key_exists("fields", $fieldset)) {
-            $fieldset["tabs"] = [$type => $fieldset];
+            $fieldset["tabs"]['content'] = A::merge($fieldset["tabs"]['content'] ?? [],  $fieldset);
             unset($fieldset["fields"]);
         }
 
@@ -47,9 +45,9 @@ class ComponentFieldsets extends Fieldsets
 
         $fieldset["tabs"] = A::merge( static::$tabs["before"] ?? [], $fieldset["tabs"], static::$tabs["after"] ?? []);
 
-
         return $fieldset;
     }
+
     protected static function createFieldsets($params)
     {
         $fieldsets = [];
@@ -70,12 +68,13 @@ class ComponentFieldsets extends Fieldsets
 
             $fieldset = Components::load($type, $fieldset);
             $fieldset["label"] = static::getName($fieldset, $type);
-            $fieldset = static::setTabs($fieldset, $type);
 
             // extract groups
             if ($fieldset["type"] === "group") {
+
                 $result = static::createFieldsets($fieldset["fieldsets"] ?? []);
                 $fieldsets = array_merge($fieldsets, $result["fieldsets"]);
+				$label     = $fieldset['label'] ?? Str::ucfirst($type); 
 
                 $groups[$type] = [
                     "label" => I18n::translate($label, $label),
@@ -84,7 +83,10 @@ class ComponentFieldsets extends Fieldsets
                     "sets" => array_column($result["fieldsets"], "type"),
                 ];
             } else {
+
+                $fieldset = static::setTabs($fieldset, $type);
                 $fieldsets[$fieldset["type"]] = $fieldset;
+
             }
         }
 
@@ -106,17 +108,20 @@ class ComponentFieldsets extends Fieldsets
         return Str::ucwords(str_replace("_", " ", $componentName));
     }
 
-    public static function factory(array $items = null, array $params = [])
+    public static function factory(array $items = null, array $params = []): static
     {
         static::$components = $components = new Components();
         static::initTabs($params["tabs"] ?? null);
         $items ??= array_keys($components->components(false, true));
 
-        return parent::factory($items, $params);
+		$result = static::createFieldsets($items);
+
+		return parent::factory($result['fieldsets'], ['groups' => $result['groups']] + $params);
     }
 
     protected static function initTabs($tabs)
     {
+
         if (is_null($tabs)) {
             return null;
         }
@@ -136,8 +141,21 @@ class ComponentFieldsets extends Fieldsets
             $comp = $blueprint = static::$components->load($component);
             $comp = A::merge($comp, $options);
             static::$tabs[$position][$name] = $comp;
-            $comp = A::merge($comp, $options);
+            //$comp = A::merge($comp, $options);
             static::$tabs[$position][$name]['label'] = static::getName($comp, $name);
         }
     }
+
+    public function groups(): array
+	{
+		return $this->options['groups'] ?? [];
+	}
+
+	public function toArray(Closure|null $map = null): array
+	{
+		return A::map(
+			$this->data,
+			$map ?? fn ($fieldset) => $fieldset->toArray()
+		);
+	}
 }

@@ -13,26 +13,32 @@ namespace Microman;
 use Kirby\Form\Field;
 use Kirby\Form\Form;
 use Kirby\Form\Field\BlocksField;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
+use Kirby\Cms\App;
+//use Microman\ComponentFieldsets as Fieldsets;
+use Kirby\Cms\Fieldsets;
 use Kirby\Toolkit\Str;
 
 class ComponentsField extends BlocksField
 {
-    protected $fieldsets;
+    protected Fieldsets $fieldsets;
     protected $fields;
     protected $tabs;
+    protected $preview;
     protected $components;
     protected static $formCache;
     protected static $fieldsetCache;
 
     public function __construct(array $params = [])
     {
+        $this->params = $params;
         $this->setTabs($params["tabs"] ?? []);
         parent::__construct($params);
     }
 
-    public function fieldsets()
+    public function fieldsets(): Fieldsets
     {
         return $this->fieldsets ?? [];
     }
@@ -59,10 +65,8 @@ class ComponentsField extends BlocksField
                 $fields = $this->fields($component["type"]);
 
                 if (empty($content)) {
-                    //Get default from fiels
+                    //Get default from fields
                     $content = A::map($fields, fn($a) => $a["default"] ?? "");
-                    //Get default from this field
-                    $content = A::merge($content, $this->default() ?? []);
                 }
 
                 $content = $this->form($fields, $content)->$to();
@@ -79,7 +83,7 @@ class ComponentsField extends BlocksField
         return $result;
     }
 
-    public function fill($value = null)
+    public function fill($value = null): void
     {
         $value = ComponentCollection::parse($value);
 
@@ -91,14 +95,15 @@ class ComponentsField extends BlocksField
 
     public function form(array $fields = null, $input = []): Form
     {
-        $hash = md5(serialize($fields) . serialize($input));
+        //$hash = md5(serialize($fields) . serialize($input));
+        $hash = md5(json_encode($fields) . json_encode($input));
         if (isset(static::$formCache[$hash])) {
             return static::$formCache[$hash];
         }
 
         return static::$formCache[$hash] = new Form([
             "fields" => $fields,
-            "model" => $this->model(),
+            "model" => $this->model,
             "strict" => true,
             "values" => $input,
         ]);
@@ -109,38 +114,28 @@ class ComponentsField extends BlocksField
         $field = $this;
 
         return [
+			[
+				'pattern' => 'paste',
+				'method'  => 'POST',
+				'action'  => function () use ($field) {
+
+					$request = App::instance()->request();
+					$value   = ComponentCollection::parse($request->get('html'));
+					$blocks  = ComponentCollection::factory($value);
+
+					return $field->pasteBlocks($blocks->toArray());
+				}
+			],
             [
-                "pattern" => "/_component_/(:any)/fields/(:any)/(:all?)",
-                "method" => "ALL",
-                "action" => function (
-                    string $fieldsetType,
-                    string $fieldName,
-                    string $path = null
-                ) use ($field) {
-                    $fieldsetType = Str::replace($fieldsetType, "__", "/");
-
-                    $fields = $field->fields($fieldsetType);
-                    $field = $field->form($fields)->field($fieldName);
-
-                    $fieldApi = $this->clone([
-                        "routes" => $field->api(),
-                        "data" => array_merge($this->data(), [
-                            "field" => $field,
-                        ]),
-                    ]);
-
-                    return $fieldApi->call(
-                        $path,
-                        $this->requestMethod(),
-                        $this->requestData()
-                    );
-                },
-            ],
-            [
-                "pattern" => "_component_/(:any)",
+                "pattern" => ["_component_/(:any)", "_component_/(:any)/(:any)" ],
                 "method" => "GET",
-                "action" => function ($fieldsetType) use ($field) {
+                "action" => function ($fieldsetType, string $fieldsetTypeAdd = null) use ($field) {
+
+                    if (is_null($fieldsetTypeAdd) === false) {
+                        $fieldsetType .= '/'. $fieldsetTypeAdd;
+                    }
                     $fieldsetType = Str::replace($fieldsetType, "__", "/");
+                    
                     $fields = $field->fields($fieldsetType);
                     $defaults = $field->form($fields, [])->data(true);
                     $content = $field->form($fields, $defaults)->values();
@@ -151,23 +146,48 @@ class ComponentsField extends BlocksField
                     ])->toArray();
                 },
             ],
+            [
+				'pattern' => '_component_/(:any)/fields/(:any)/(:all?)',
+				'method'  => 'ALL',
+				'action'  => function (
+                    string $fieldsetType, 
+                    string $fieldName, 
+                    string $path = null
+                ) use ($field) {
+					
+                    $fieldsetType = Str::replace($fieldsetType, "__", "/");
+
+                    $fields = $field->fields($fieldsetType);
+					$field  = $field->form($fields)->field($fieldName);
+
+					$fieldApi = $this->clone([
+						'routes' => $field->api(),
+						'data'   => array_merge($this->data(), ['field' => $field])
+					]);
+
+					return $fieldApi->call($path, $this->requestMethod(), $this->requestData());
+				}
+            ]
         ];
     }
 
-    public function setFieldsets($fieldsets, $model)
+    protected function setFieldsets(
+		string|array|null $fieldsets,
+		ModelWithContent $model
+	): void
     {
         if (empty($fieldsets)) {
             throw new InvalidArgumentException("Missing component definition");
         }
         $fieldsets = A::wrap($fieldsets);
 
-        $fieldsets = ComponentFieldsets::factory($fieldsets, [
+        $fieldsets = Fieldsets::factory($fieldsets, [
             "parent" => $model,
             "tabs" => $this->tabs,
         ]);
 
         //To remove?
-        $this->fields = $fieldsets->fields();
+        //$this->fields = $fieldsets->fields();
 
         $this->fieldsets = $fieldsets;
     }
@@ -181,4 +201,5 @@ class ComponentsField extends BlocksField
     {
         $this->tabs = $tabs;
     }
+
 }

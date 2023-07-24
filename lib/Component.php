@@ -28,8 +28,9 @@ class Component extends Block
     protected $isSelected;
     protected $isComponent = true;
     protected $controller;
+    protected $extends;
     protected $subComponent;
-    protected $type = "";
+    protected string $type = "";
 
     public function __construct(array $params = [])
     {
@@ -39,41 +40,29 @@ class Component extends Block
         $this->isComponent = Components::isComponent($params["type"] ?? "");
         $this->subComponent = Components::subComponent($params["type"] ?? "");
         $this->controller = $params["options"]["controller"] ?? null;
-        $extends = $params["options"]["extends"] ?? null;
+        $this->extends = $params["options"]["extends"] ?? null;
 
         // Inject content object if possible
         // Preset cause parent will kill it
-        if ($params['content'] instanceof Content) {
+
+        if (is_object($params['content'])) {
             $content = $params['content'];
         }
 
         parent::__construct($params);
 
         if(isset($content)) {
-            $this->content = $content;
-        }
 
-        //Extends content
-
-        if (is_null($extends)) {
-            return;
-        }
-
-		if (is_array($extends)) {
-            $this->content->update($extends);
-        } else {
-            //Try to take data from kirby objects
-            try {
-                $extends = $extends->content()->toArray();
-                $this->content->update($extends);
-            } catch (\Throwable $th) {
-                throw new InvalidArgumentException('Could not resolve extension data');
+            if ( method_exists($content, 'content') ) {
+                $content = $content->content();
             }
+
+            $this->content = $content;
         }
     }
 
 
-    public function __call(string $method, array $args = [])
+    public function __call(string $method, array $args = []): mixed
     {
 
         if ($this->hasMethod($method)) {
@@ -100,7 +89,7 @@ class Component extends Block
 
     public function controller(): array
     {
-        $controller = parent::controller();
+        $controller = A::merge(parent::controller(), $this->extends);
 
         if ($this->isComponent() === false) {
             $params = $controller["block"]->params;
@@ -117,7 +106,9 @@ class Component extends Block
 
     public function toHtml(): string
     {
-        try {
+        
+        //try {
+
             $snippet = $this->type();
 
             if ($this->isComponent()) {
@@ -130,6 +121,7 @@ class Component extends Block
                 $this->controller(),
                 true
             );
+            /*
         } catch (\Throwable $e) {
             if ($kirby->option("debug") === true) {
                 return '<p>Block error: "' .
@@ -141,6 +133,7 @@ class Component extends Block
 
             return "";
         }
+        */
     }
 
     public function toArray(): array
@@ -150,4 +143,5 @@ class Component extends Block
             "isSelected" => $this->isSelected(),
         ]);
     }
+
 }

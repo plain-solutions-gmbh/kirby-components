@@ -1,6 +1,9 @@
 
-.k-component-form {
+.k-component-field:not(.k-component-empty) > .k-component-form {
   margin-top:1.5em;
+}
+.k-component-empty > header {
+  display:none;
 }
 
 .k-images-toggles-field .k-toggles-image-wrapper {
@@ -30,6 +33,16 @@
   text-align: center;
   width: 100%;
 }
+.k-blocks-list.k-grid {
+	grid-row-gap: 0;
+}
+
+
+.k-components-preview .k-field-header > .k-field-label {
+    font-size: 0.9em;
+    line-height: 0.7em;
+}
+
 .k-component-license > .k-box {
   text-align: center;
 }

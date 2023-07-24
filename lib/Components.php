@@ -75,8 +75,17 @@ class Components
 
     static function load(string $type, array $extends = [])
     {
+
+        if (isset($extends['type'])) {
+            $type = $extends['type'];
+        }
+
+        if (($extends['type'] ?? $type) === "group") {
+            return $extends;
+        }
+
         //Get from Cache
-        $hash = md5(serialize($type) . serialize($extends));
+        $hash = md5(json_encode($type) . json_encode($extends));
         if (isset(static::$loaded[$hash]) === true) {
             return static::$loaded[$hash];
         }

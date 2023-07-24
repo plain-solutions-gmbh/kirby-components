@@ -1,14 +1,14 @@
 <template>
-<div>
   <k-field
-    v-if="!issingle"
     v-bind="$props"
     :input="_uid"
     :counter="counterOptions"
     class="k-component-field"
+    :class="issingle ? 'k-component-empty' : ''"
   >
     <k-component-license  v-if="showLicense" @onSuccess="showLicense = false" />
     <k-imagetoggles-field
+      v-if="!issingle"
       v-bind="selector"
       :value="current"
       :label="label"
@@ -24,18 +24,8 @@
       :endpoints="endpoints"
       @update="input(componentName, $event)"
     />
-  </k-field>
-  <div v-else>
-    <k-component-form
-    v-bind="fieldsets[current]"
-    :type="current"
-    :value="components[current].content"
-    :endpoints="endpoints"
-    @update="input(current, $event)"
-    />
-  </div>
-</div>
 
+  </k-field>
 </template>
 
 <script>
@@ -53,7 +43,7 @@ export default {
   },
   data() {
     return {
-      components: this.value,
+      components: this.value ?? {},
       showLicense: true,
     };
   },
@@ -68,13 +58,13 @@ export default {
       return current;
     },
   },
+  created() {
+    this.showLicense = !this.license
+  },
   watch: {
     components() {
       this.components = this.value;
     },
-  },
-  created() {
-    this.showLicense = !this.license
   },
   methods: {
     input(name, value) {
@@ -93,8 +83,12 @@ export default {
 
 <style>
 
-.k-component-form {
+.k-component-field:not(.k-component-empty) > .k-component-form {
   margin-top:1.5em;
+}
+
+.k-component-empty > header {
+  display:none;
 }
 
 </style>

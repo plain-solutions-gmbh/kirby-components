@@ -40,14 +40,9 @@ export default {
         return false;
       },
     },
-    tabs: {
-      type: Object,
-      default() {
-        return {};
-      }
-    },
     icon: String,
     id: String,
+    tabs: Object,
     type: String,
     value: Object,
   },

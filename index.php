@@ -7,7 +7,7 @@ load(
         "Microman\\ComponentFieldsets" => "/lib/ComponentFieldsets.php",
         "Microman\\ComponentFieldset" => "/lib/ComponentFieldset.php",
         "Microman\\ComponentCollection" => "/lib/ComponentCollection.php",
-        "Microman\\ImagetogglesField" => "/lib/ImagetogglesField.php",
+        "Microman\\ImagetogglesField" => "/lib/ImageTogglesField.php",
         "Microman\\Components" => "/lib/Components.php",
         "Microman\\Component" => "/lib/Component.php",
         "Microman\\ComponentLicense" => "/lib/ComponentLicense.php",

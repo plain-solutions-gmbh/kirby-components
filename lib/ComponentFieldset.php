@@ -29,7 +29,7 @@ class ComponentFieldset extends Fieldset
     {
         $this->setImage($params["image"] ?? "");
         $this->savename =
-            $params["savename"] ?? Str::replace($this->type, "/", "__");
+            $params["savename"] ?? Str::replace($this->type ?? "", "/", "__");
         $this->fields = $params["fields"] ?? [];
 
         parent::__construct($params);
@@ -61,18 +61,18 @@ class ComponentFieldset extends Fieldset
         return $split_type[1] ?? $split_type[0];
     }
 
-    public function form($fields = null, array $input = [])
+    public function form($fields = null, array $input = []): Form
     {
         $fields ??= $this->fields() ?? [];
 
-        $hash = md5(serialize($fields) . serialize($input));
+        $hash = md5(json_encode($fields) . json_encode($input));
         if (isset(static::$formCache[$hash])) {
             return static::$formCache[$hash];
         }
 
         return static::$formCache[$hash] = new Form([
             "fields" => $fields,
-            "model" => $this->model,
+            "model" => $this->parent,
             "strict" => true,
             "values" => $input,
         ]);
