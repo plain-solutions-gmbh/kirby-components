@@ -17,7 +17,6 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Cms\App;
-//use Microman\ComponentFieldsets as Fieldsets;
 use Kirby\Cms\Fieldsets;
 use Kirby\Toolkit\Str;
 
@@ -181,7 +180,7 @@ class ComponentsField extends BlocksField
         }
         $fieldsets = A::wrap($fieldsets);
 
-        $fieldsets = Fieldsets::factory($fieldsets, [
+        $fieldsets = ComponentFieldsets::factory($fieldsets, [
             "parent" => $model,
             "tabs" => $this->tabs,
         ]);

@@ -14,9 +14,9 @@ use Closure;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
-use Kirby\Cms\Items;
+use Kirby\Cms\Fieldsets;
 
-class ComponentFieldsets extends Items
+class ComponentFieldsets extends Fieldsets
 {
     public const ITEM_CLASS = ComponentFieldset::class;
 
@@ -48,7 +48,7 @@ class ComponentFieldsets extends Items
         return $fieldset;
     }
 
-    protected static function createFieldsets($params)
+    protected static function createFieldsets($params): array
     {
         $fieldsets = [];
         $groups = [];
@@ -114,9 +114,7 @@ class ComponentFieldsets extends Items
         static::initTabs($params["tabs"] ?? null);
         $items ??= array_keys($components->components(false, true));
 
-		$result = static::createFieldsets($items);
-
-		return parent::factory($result['fieldsets'], ['groups' => $result['groups']] + $params);
+        return parent::factory($items, $params);
     }
 
     protected static function initTabs($tabs)
@@ -146,16 +144,4 @@ class ComponentFieldsets extends Items
         }
     }
 
-    public function groups(): array
-	{
-		return $this->options['groups'] ?? [];
-	}
-
-	public function toArray(Closure|null $map = null): array
-	{
-		return A::map(
-			$this->data,
-			$map ?? fn ($fieldset) => $fieldset->toArray()
-		);
-	}
 }
